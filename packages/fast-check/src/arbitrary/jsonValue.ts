@@ -1,9 +1,7 @@
 import type { Arbitrary } from '../check/arbitrary/definition/Arbitrary';
-import { string } from './string';
 import type { JsonSharedConstraints, JsonValue } from './_internals/helpers/JsonConstraintsBuilder';
 import { jsonConstraintsBuilder } from './_internals/helpers/JsonConstraintsBuilder';
 import { anything } from './anything';
-import { fullUnicodeString } from './fullUnicodeString';
 
 export type { JsonSharedConstraints, JsonValue };
 
@@ -21,12 +19,5 @@ export type { JsonSharedConstraints, JsonValue };
  * @public
  */
 export function jsonValue(constraints: JsonSharedConstraints = {}): Arbitrary<JsonValue> {
-  const noUnicodeString = constraints.noUnicodeString === undefined || constraints.noUnicodeString === true;
-  const stringArbitrary =
-    'stringUnit' in constraints
-      ? string({ unit: constraints.stringUnit })
-      : noUnicodeString
-        ? string()
-        : fullUnicodeString();
-  return anything(jsonConstraintsBuilder(stringArbitrary, constraints)) as Arbitrary<JsonValue>;
+  return anything(jsonConstraintsBuilder(constraints)) as Arbitrary<JsonValue>;
 }
